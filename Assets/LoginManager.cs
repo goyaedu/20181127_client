@@ -21,6 +21,19 @@ public struct SignInForm
     public string password;
 }
 
+// 응답
+public struct LoginResult
+{
+    public int result;
+}
+
+public enum ResponseType
+{
+    INVALID_USERNAME = 0,
+    INVALID_PASSWORD,
+    SUCCESS
+}
+
 public class LoginManager : MonoBehaviour {
 
     public Image signupPanel;
@@ -35,7 +48,7 @@ public class LoginManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        loginButton.enabled = false;
+        loginButton.interactable = false;
     }
 	
 	// Update is called once per frame
@@ -52,6 +65,8 @@ public class LoginManager : MonoBehaviour {
     // 로그인 버튼 이벤트
     public void OnClickSignInButton()
     {
+        loginButton.interactable = false;
+
         string username = loginUsernameInputField.text;
         string password = loginPasswordInputField.text;
 
@@ -80,6 +95,8 @@ public class LoginManager : MonoBehaviour {
 
             yield return www.Send();
 
+            loginButton.interactable = true;
+
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log(www.error);
@@ -87,7 +104,10 @@ public class LoginManager : MonoBehaviour {
             else
             {
                 string resultStr = www.downloadHandler.text;
-                if (resultStr.Equals("success"))
+
+                var result = JsonUtility.FromJson<LoginResult>(resultStr);
+
+                if (result.result == 2)
                 {
                     SceneManager.LoadScene("Game");
                 }
@@ -154,12 +174,14 @@ public class LoginManager : MonoBehaviour {
 
     public void UpdateLoginInputFiled()
     {
-        if (!string.IsNullOrEmpty(loginUsernameInputField.text) && !string.IsNullOrEmpty(loginPasswordInputField.text))
+        if (!string.IsNullOrEmpty(loginUsernameInputField.text) 
+            && !string.IsNullOrEmpty(loginPasswordInputField.text))
         {
-            loginButton.enabled = true;
-        } else
+            loginButton.interactable = true;
+        }
+        else
         {
-            loginButton.enabled = false;
+            loginButton.interactable = false;
         }
     }
 }
