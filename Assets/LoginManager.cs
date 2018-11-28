@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 // 회원가입 폼
 public struct SignUpForm
@@ -85,6 +86,12 @@ public class LoginManager : MonoBehaviour {
             }
             else
             {
+                string resultStr = www.downloadHandler.text;
+                if (resultStr.Equals("success"))
+                {
+                    SceneManager.LoadScene("Game");
+                }
+
                 Debug.Log(www.downloadHandler.text);
             }
         }
