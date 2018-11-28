@@ -13,6 +13,13 @@ public struct SignUpForm
     public string nickname;
 }
 
+// 로그인
+public struct SignInForm
+{
+    public string username;
+    public string password;
+}
+
 public class LoginManager : MonoBehaviour {
 
     public Image signupPanel;
@@ -21,10 +28,14 @@ public class LoginManager : MonoBehaviour {
     public InputField confirmPasswordInputField;
     public InputField nicknameInputField;
 
+    public InputField loginUsernameInputField;
+    public InputField loginPasswordInputField;
+    public Button loginButton;
+
     // Use this for initialization
     void Start () {
-		
-	}
+        loginButton.enabled = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -36,6 +47,49 @@ public class LoginManager : MonoBehaviour {
     {
         signupPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
     }
+
+    // 로그인 버튼 이벤트
+    public void OnClickSignInButton()
+    {
+        string username = loginUsernameInputField.text;
+        string password = loginPasswordInputField.text;
+
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        {
+            return;
+        }
+
+        // TODO: 서버에 회원가입 정보 전송
+        SignInForm signinForm = new SignInForm();
+        signinForm.username = username;
+        signinForm.password = password;
+
+        StartCoroutine(SignIn(signinForm));
+    }
+
+    IEnumerator SignIn(SignInForm form)
+    {
+        string postData = JsonUtility.ToJson(form);
+
+        using (UnityWebRequest www = 
+            UnityWebRequest.Put("http://localhost:3000/users/signin", postData))
+        {
+            www.method = "POST";
+            www.SetRequestHeader("Content-Type", "application/json");
+
+            yield return www.Send();
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+            }
+        }
+    }
+
     // 확인 버튼 이벤트
     public void OnClickConfirmButton()
     {
@@ -88,6 +142,17 @@ public class LoginManager : MonoBehaviour {
             {
                 Debug.Log(www.downloadHandler.text);
             }
+        }
+    }
+
+    public void UpdateLoginInputFiled()
+    {
+        if (!string.IsNullOrEmpty(loginUsernameInputField.text) && !string.IsNullOrEmpty(loginPasswordInputField.text))
+        {
+            loginButton.enabled = true;
+        } else
+        {
+            loginButton.enabled = false;
         }
     }
 }
