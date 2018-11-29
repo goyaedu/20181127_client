@@ -112,6 +112,11 @@ public class LoginManager : MonoBehaviour {
 
                 if (result.result == 2)
                 {
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        PlayerPrefs.SetString("username", username);
+                    }
+
                     SceneManager.LoadScene("Game");
                 }
 
