@@ -103,8 +103,11 @@ public class LoginManager : MonoBehaviour {
             }
             else
             {
-                string resultStr = www.downloadHandler.text;
+                string cookie = www.GetResponseHeader("set-cookie");
+                int lastIdx = cookie.IndexOf(';');
+                string username = cookie.Substring(9, lastIdx - 9);
 
+                string resultStr = www.downloadHandler.text;
                 var result = JsonUtility.FromJson<LoginResult>(resultStr);
 
                 if (result.result == 2)
