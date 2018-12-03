@@ -9,11 +9,50 @@ public class UIManager : MonoBehaviour
 {
     public Text ServerMessage;
 
+    // 스코어 추가
+    public InputField scoreInputField;
+
+    // 스코어 가져오기
+    public Text scoreText;
+
+    public void OnClickAddScore()
+    {
+        string scoreStr = scoreInputField.text;
+        if (string.IsNullOrEmpty(scoreStr))
+        {
+            StartCoroutine(AddScore(scoreStr));
+        }
+    }
+
+    public void OnClickGetScore()
+    {
+        StartCoroutine(GetScore());
+    }
+
+    IEnumerator AddScore(string score)
+    {
+        using (UnityWebRequest www =
+            UnityWebRequest.Get("http://localhost:3000/users/addscore/"+score))
+        {
+            yield return www.Send();
+            string resultStr = www.downloadHandler.text;
+        }
+    }
+
+    IEnumerator GetScore()
+    {
+        using (UnityWebRequest www =
+            UnityWebRequest.Get("http://localhost:3000/users/score/"))
+        {
+            yield return www.Send();
+            string resultStr = www.downloadHandler.text;
+        }
+    }
+
     public void OnButtonClicked()
     {
         StartCoroutine(GetUserInfo());
     }
-
     IEnumerator GetUserInfo()
     {
         using (UnityWebRequest www = 

@@ -176,6 +176,15 @@ public class LoginManager : MonoBehaviour {
             else
             {
                 Debug.Log(www.downloadHandler.text);
+
+                // 회원가입 성공하면 Signup 패널 닫기
+                string result = www.downloadHandler.text;
+
+                if (result.Equals("success"))
+                {
+                    signupPanel.GetComponent<RectTransform>().anchoredPosition 
+                        = new Vector2(560, 0);
+                }
             }
         }
     }
