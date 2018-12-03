@@ -105,16 +105,16 @@ public class LoginManager : MonoBehaviour {
             {
                 string cookie = www.GetResponseHeader("set-cookie");
                 int lastIdx = cookie.IndexOf(';');
-                string username = cookie.Substring(9, lastIdx - 9);
+                string sid = cookie.Substring(0, lastIdx);
 
                 string resultStr = www.downloadHandler.text;
                 var result = JsonUtility.FromJson<LoginResult>(resultStr);
 
                 if (result.result == 2)
                 {
-                    if (!string.IsNullOrEmpty(username))
+                    if (!string.IsNullOrEmpty(sid))
                     {
-                        PlayerPrefs.SetString("username", username);
+                        PlayerPrefs.SetString("sid", sid);
                     }
 
                     SceneManager.LoadScene("Game");

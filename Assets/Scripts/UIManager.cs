@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     public void OnClickAddScore()
     {
         string scoreStr = scoreInputField.text;
-        if (string.IsNullOrEmpty(scoreStr))
+        if (!string.IsNullOrEmpty(scoreStr))
         {
             StartCoroutine(AddScore(scoreStr));
         }
@@ -31,9 +31,17 @@ public class UIManager : MonoBehaviour
 
     IEnumerator AddScore(string score)
     {
+
         using (UnityWebRequest www =
             UnityWebRequest.Get("http://localhost:3000/users/addscore/"+score))
         {
+            string sid = PlayerPrefs.GetString("sid");
+
+            if (!string.IsNullOrEmpty(sid))
+            {
+                www.SetRequestHeader("Cookie", sid);
+            }
+
             yield return www.Send();
             string resultStr = www.downloadHandler.text;
         }
@@ -44,8 +52,20 @@ public class UIManager : MonoBehaviour
         using (UnityWebRequest www =
             UnityWebRequest.Get("http://localhost:3000/users/score/"))
         {
+            string sid = PlayerPrefs.GetString("sid");
+
+            if (!string.IsNullOrEmpty(sid))
+            {
+                www.SetRequestHeader("Cookie", sid);
+            }
+
             yield return www.Send();
             string resultStr = www.downloadHandler.text;
+
+            if (!string.IsNullOrEmpty(resultStr))
+            {
+                scoreText.text = resultStr;
+            }
         }
     }
 
