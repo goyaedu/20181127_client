@@ -7,14 +7,23 @@ public class NetworkManager : MonoBehaviour
 {
     SocketIOComponent socket;
 
-	void Start ()
+    void Start()
     {
         GameObject io = GameObject.Find("SocketIO");
         socket = io.GetComponent<SocketIOComponent>();
 
-	}
-	
-	void Update () {
-		
-	}
+        socket.On("hello", Hello);
+    }
+
+    void Hello(SocketIOEvent e)
+    {
+        Debug.Log("Hello");
+    }
+
+    public void Hi()
+    {
+        socket.Emit("hi");
+    }
+
 }
+
