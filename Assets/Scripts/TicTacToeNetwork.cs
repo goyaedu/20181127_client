@@ -12,6 +12,10 @@ public class TicTacToeNetwork : MonoBehaviour
     public Button connectButton;
     public Button closeButton;
 
+    private Vector2 startPanelPos;
+
+    private PlayerType playerType;
+
     // Socket.io
     SocketIOComponent socket;
 
@@ -32,15 +36,23 @@ public class TicTacToeNetwork : MonoBehaviour
 
         socket.On("joinRoom", JoinRoom);
         socket.On("createRoom", CreateRoom);
+        socket.On("exitRoom", ExitRoom);
+    }
+
+    void ExitRoom(SocketIOEvent e)
+    {
+        socket.Close();
     }
 
     void JoinRoom(SocketIOEvent e)
     {
-        Debug.Log("Join room.");
+        string roomId = e.data.GetField("room").str;
     }
 
     void CreateRoom(SocketIOEvent e)
     {
-        Debug.Log("Create room.");
+        string roomId = e.data.GetField("room").str;
+
+        playerType = PlayerType.PlayerOne;
     }
 }
