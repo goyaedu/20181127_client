@@ -37,6 +37,12 @@ public class TicTacToeNetwork : MonoBehaviour
         socket.On("joinRoom", JoinRoom);
         socket.On("createRoom", CreateRoom);
         socket.On("exitRoom", ExitRoom);
+        socket.On("startGame", StartGame);
+    }
+
+    void StartGame(SocketIOEvent e)
+    {
+        startPanel.gameObject.SetActive(false);
     }
 
     void ExitRoom(SocketIOEvent e)
