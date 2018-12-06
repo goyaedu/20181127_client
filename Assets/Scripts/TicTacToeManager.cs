@@ -24,6 +24,9 @@ public class TicTacToeManager : MonoBehaviour
     int[] cellStates = new int[9]; // o,x 값 정보
     TicTacToeNetwork networkManager;
 
+    // 게임 승패
+    enum Winner { None, Player, Opponent, Tie }
+
     // 게임 상태
     GameState gameState;
 
@@ -61,8 +64,12 @@ public class TicTacToeManager : MonoBehaviour
                     GameObject cell = hitInfo.transform.gameObject;
                     int cellIndex = int.Parse(cell.name);
 
+                    // 서버에 Cell Index 전달
+                    networkManager.DoPlayer(cellIndex);
+
                     // TODO: 셀에 O 혹은 X 표시하기
                     DrawMark(cellIndex, Player.Player);
+
                 }
             }
         }
@@ -93,6 +100,35 @@ public class TicTacToeManager : MonoBehaviour
         // 할당된 Cell을 터치가 불가능하게 비활성
         cells[cellIndex].GetComponent<BoxCollider2D>().enabled = false;
 
+
+        // 턴 변경
+        // 1. 게임이 계속 진행 중이어야 한다.
+        Winner result = CheckWinner();
+
+        if (result == Winner.None)
+        {
+            if (gameState == GameState.PlayerTurn)
+            {
+                gameState = GameState.OpponentTurn;
+            }
+            else if (gameState == GameState.OpponentTurn)
+            {
+                gameState = GameState.PlayerTurn;
+            }
+        }
+        else
+        {
+            gameState = GameState.GameOver;
+
+            // TODO: 게임의 결과 화면에 표시
+        }
+
+    }
+
+    // 승패 확인
+    Winner CheckWinner()
+    {
+        return Winner.None;
     }
 
     public void StartGame(PlayerType type)
