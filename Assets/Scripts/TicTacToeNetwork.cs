@@ -12,9 +12,9 @@ public class TicTacToeNetwork : MonoBehaviour
     public Button connectButton;
     public Button closeButton;
 
-    private Vector2 startPanelPos;
-
-    private PlayerType playerType;
+    TicTacToeManager gameManager;
+    Vector2 startPanelPos;
+    PlayerType playerType;
 
     // Socket.io
     SocketIOComponent socket;
@@ -37,12 +37,15 @@ public class TicTacToeNetwork : MonoBehaviour
         GameObject so = GameObject.Find("SocketIO");
         socket = so.GetComponent<SocketIOComponent>();
 
-        socket.On("joinRoom", JoinRoom);
+        gameManager = GetComponent<TicTacToeManager>();
+
         socket.On("createRoom", CreateRoom);
-        socket.On("exitRoom", ExitRoom);
+        socket.On("joinRoom", JoinRoom);
         socket.On("startGame", StartGame);
 
-        //startPanel.gameObject.SetActive(true);
+        socket.On("exitRoom", ExitRoom);
+        
+        startPanel.gameObject.SetActive(true);
 
         closeButton.interactable = false;
     }
@@ -50,8 +53,10 @@ public class TicTacToeNetwork : MonoBehaviour
     void StartGame(SocketIOEvent e)
     {
         startPanel.gameObject.SetActive(false);
-
         closeButton.interactable = true;
+
+        // 게임 시작
+        gameManager.StartGame(playerType);
     }
 
     void ExitRoom(SocketIOEvent e)
@@ -62,12 +67,12 @@ public class TicTacToeNetwork : MonoBehaviour
     void JoinRoom(SocketIOEvent e)
     {
         string roomId = e.data.GetField("room").str;
+        playerType = PlayerType.PlayerTwo;
     }
 
     void CreateRoom(SocketIOEvent e)
     {
         string roomId = e.data.GetField("room").str;
-
         playerType = PlayerType.PlayerOne;
     }
 }

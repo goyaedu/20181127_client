@@ -29,7 +29,7 @@ public class TicTacToeManager : MonoBehaviour
 
     private void Awake()
     {
-        gameState = GameState.PlayerTurn;
+        gameState = GameState.None;
     }
 
     private void Start()
@@ -93,5 +93,19 @@ public class TicTacToeManager : MonoBehaviour
         // 할당된 Cell을 터치가 불가능하게 비활성
         cells[cellIndex].GetComponent<BoxCollider2D>().enabled = false;
 
+    }
+
+    public void StartGame(PlayerType type)
+    {
+        playerType = type;
+        
+        if (type == PlayerType.PlayerOne)
+        {
+            gameState = GameState.PlayerTurn;
+        }
+        else
+        {
+            gameState = GameState.OpponentTurn;
+        }
     }
 }
