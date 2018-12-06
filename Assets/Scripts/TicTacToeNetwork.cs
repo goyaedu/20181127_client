@@ -22,6 +22,9 @@ public class TicTacToeNetwork : MonoBehaviour
     public void Connect()
     {
         socket.Connect();
+        startMessageText.text = "상대를 기다리는 중...";
+        connectButton.gameObject.SetActive(false);
+        //connectButton.interactable = false;
     }
 
     public void Close()
@@ -38,11 +41,17 @@ public class TicTacToeNetwork : MonoBehaviour
         socket.On("createRoom", CreateRoom);
         socket.On("exitRoom", ExitRoom);
         socket.On("startGame", StartGame);
+
+        startPanel.gameObject.SetActive(true);
+
+        closeButton.interactable = false;
     }
 
     void StartGame(SocketIOEvent e)
     {
         startPanel.gameObject.SetActive(false);
+
+        closeButton.interactable = true;
     }
 
     void ExitRoom(SocketIOEvent e)
