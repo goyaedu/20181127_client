@@ -42,7 +42,7 @@ public class TicTacToeNetwork : MonoBehaviour
         socket.On("exitRoom", ExitRoom);
         socket.On("startGame", StartGame);
 
-        startPanel.gameObject.SetActive(true);
+        //startPanel.gameObject.SetActive(true);
 
         closeButton.interactable = false;
     }
