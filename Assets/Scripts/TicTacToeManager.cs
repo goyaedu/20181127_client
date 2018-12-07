@@ -24,6 +24,8 @@ public class TicTacToeManager : MonoBehaviour
     int[] cellStates = new int[9]; // o,x 값 정보
     TicTacToeNetwork networkManager;
 
+    int rowNum = 3;
+
     // 게임 승패
     enum Winner { None, Player, Opponent, Tie }
 
@@ -128,7 +130,46 @@ public class TicTacToeManager : MonoBehaviour
     // 승패 확인
     Winner CheckWinner()
     {
-        return Winner.None;
+        int playerTypeValue = (int)playerType;
+
+        // 가로 체크
+        for (int y = 0; y < rowNum; ++y)
+        {
+            int mark = cellStates[y * rowNum];
+            int num = 0;
+            for (int x = 0; x < rowNum; ++x)
+            {
+                int index = y * rowNum + x;
+                if (mark == cellStates[index])
+                {
+                    ++num;
+                }
+            }
+            if (mark != -1 && num == rowNum)
+            {
+                int markValue = (int)mark;
+                return (playerTypeValue == markValue) ? Winner.Player : Winner.Opponent;
+            }
+        }
+
+        for (int x = 0; x < rowNum; ++x)
+        {
+            int mark = cellStates[x];
+            int num = 0;
+            for (int y = 0; y < rowNum; ++y)
+            {
+                int index = y * rowNum + x;
+                if (mark == cellStates[index])
+                {
+                    ++num;
+                }
+            }
+            if (mark != -1 && num == rowNum)
+            {
+                int markValue = (int)mark;
+                return (playerTypeValue == markValue) ? Winner.Player : Winner.Opponent;
+            }
+        }
     }
 
     public void StartGame(PlayerType type)
