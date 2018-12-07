@@ -170,6 +170,62 @@ public class TicTacToeManager : MonoBehaviour
                 return (playerTypeValue == markValue) ? Winner.Player : Winner.Opponent;
             }
         }
+
+        {
+            int mark = cellStates[0];
+            int num = 0;
+            for (int xy = 0; xy < rowNum; ++xy)
+            {
+                int index = xy * rowNum + xy;
+                if (mark == cellStates[index])
+                {
+                    ++num;
+                }
+            }
+            if (mark != -1 && num == rowNum)
+            {
+                int markValue = (int)mark;
+                return (playerTypeValue == markValue) ? Winner.Player : Winner.Opponent;
+            }
+        }
+        {
+            int mark = cellStates[rowNum - 1];
+            int num = 0;
+            for (int xy = 0; xy < rowNum; ++xy)
+            {
+                int index = xy * rowNum + rowNum - xy - 1;
+                if (mark == cellStates[index])
+                {
+                    ++num;
+                }
+            }
+            if (mark != -1 && num == rowNum)
+            {
+                int markValue = (int)mark;
+                return (playerTypeValue == markValue) ? Winner.Player : Winner.Opponent;
+            }
+        }
+        {
+            int num = 0;
+            foreach(int cellState in cellStates)
+            {
+                if (cellState == -1)
+                {
+                    ++num;
+                }
+            }
+            if (num == 0)
+            {
+                return Winner.Tie;
+            }
+        }
+        return Winner.None;
+
+
+
+
+
+
     }
 
     public void StartGame(PlayerType type)
